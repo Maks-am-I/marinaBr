@@ -1,0 +1,31 @@
+@use './../helpers/' as *;
+
+.menu {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    gap: rem(12);
+    padding: rem(12);
+    background-color: var(--color-main);
+    border-radius: var(--border-radius-base);
+
+    top: rem(86);
+    left: rem(10);
+    right: rem(10);
+
+    transform: translateX(110%);
+    visibility: hidden;
+    opacity: 0;
+    transition-duration: 0.3s;
+
+    & a {
+        font-size: rem(24);
+    }
+
+    &.open {
+        transform: translateX(0);
+        visibility: visible;
+        opacity: 1;
+        transition-duration: 0.3s;
+    }
+}

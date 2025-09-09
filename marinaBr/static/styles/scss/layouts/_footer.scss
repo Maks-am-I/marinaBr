@@ -1,0 +1,26 @@
+@use './../helpers/' as *;
+
+.footer {
+    @include fluid-text(16, 9);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: rem(10);
+    padding-bottom: rem(14);
+    background-color: var(--color-main);
+    border-top-left-radius: var(--border-radius-base);
+    border-top-right-radius: var(--border-radius-base);
+
+    &__messengers, 
+    & address {
+        display: flex;
+        flex-direction: column;
+        gap: rem(10);
+        
+        & a {
+            text-decoration: none;
+            color: var(--color-font-accent-1);
+        }
+    }
+}

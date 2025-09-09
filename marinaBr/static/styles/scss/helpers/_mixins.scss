@@ -1,0 +1,11 @@
+@use 'sass:math';
+@use 'functions';
+
+@mixin fluid-text($max: 48, $min: 16) {
+  font-size: functions.fluid($max, $min);
+}
+
+@mixin square($size) {
+  width: $size;
+  height: $size;
+}

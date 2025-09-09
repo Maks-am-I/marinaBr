@@ -1,0 +1,19 @@
+@use '../helpers/' as *;
+
+.burger {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: rem(1);
+
+    &__up-line,
+    &__mid-line,
+    &__bottom-line {
+        display: inline-block;
+        height: rem(2);
+        width: rem(16);
+        background-color: var(--color-accent-2);
+        border-radius: var(--border-radius-base);
+    }
+}
