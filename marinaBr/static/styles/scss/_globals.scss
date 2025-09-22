@@ -1,7 +1,7 @@
 @use 'helpers' as *;
 
 body {
-    @include fluid-text(24, 8);
+    @include fluid-text(24, 16);
 
     display: flex;
     flex-direction: column;
@@ -10,4 +10,3 @@ body {
     background-color: var(--color-background);
     color: var(--color-font-base);
 }
-

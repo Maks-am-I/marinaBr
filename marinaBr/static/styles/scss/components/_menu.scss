@@ -19,7 +19,7 @@
     transition-duration: 0.3s;
 
     & a {
-        font-size: rem(24);
+        @include fluid-text(20, 14);
     }
 
     &.open {
@@ -27,5 +27,15 @@
         visibility: visible;
         opacity: 1;
         transition-duration: 0.3s;
+    }
+}
+
+@media (min-width: 969px) {
+    .menu {
+        flex-direction: row;
+        transform: none;
+        visibility: visible;
+        opacity: 1;
+        position: static;
     }
 }

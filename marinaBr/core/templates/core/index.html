@@ -17,14 +17,14 @@
             <div class="header__cart">
                 <img src="{% static 'assets/icons/cart.svg' %}" alt="cart">
             </div>
-            <nav class="header__menu menu">
+            <nav class="header__menu menu" id="nav-menu">
                 <a>Условия заказа</a>
                 <a>Ассортимент</a>
                 <a>Контактная информация</a>
                 <a>Заказать обратный звонок</a>
                 <a>Корзина</a>
             </nav>
-            <div class="header__burger burger">
+            <div class="header__burger burger" id="burger">
                 <span class="burger__up-line"></span>
                 <span class="burger__mid-line"></span>
                 <span class="burger__bottom-line"></span>
@@ -51,5 +51,7 @@
             </a>
         </address>
     </footer>
+
+    <script src="{% static 'scripts/burger.js' %}"></script>
 </body>
 </html>

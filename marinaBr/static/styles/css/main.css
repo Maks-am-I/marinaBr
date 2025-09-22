@@ -140,7 +140,6 @@ html {
     Убираем скачок интерфейса по горизонтали
     при появлении / исчезновении скроллбара
    */
-  scrollbar-gutter: stable;
 }
 
 /**
@@ -228,7 +227,7 @@ svg * {
   }
 }
 body {
-  font-size: clamp(0.5rem, 0.1246418338rem + 1.5281757402vw, 1.5rem);
+  font-size: clamp(1rem, 0.8123209169rem + 0.7640878701vw, 1.5rem);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -283,11 +282,21 @@ body {
   margin-bottom: 0.1875rem;
 }
 
+@media (min-width: 969px) {
+  .header__nav {
+    order: 2;
+    align-items: center;
+  }
+  .header__cart {
+    order: 3;
+  }
+}
 .footer {
-  font-size: clamp(0.5625rem, 0.3982808023rem + 0.6685768863vw, 1rem);
+  font-size: clamp(1rem, 0.8123209169rem + 0.7640878701vw, 1.5rem);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1.25rem;
   padding-top: 0.625rem;
   padding-bottom: 0.875rem;
   background-color: var(--color-main);
@@ -298,10 +307,14 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.625rem;
+  text-align: right;
 }
 .footer__messengers a, .footer address a {
   text-decoration: none;
   color: var(--color-font-accent-1);
+}
+.footer__messengers {
+  min-width: 1.5625rem;
 }
 
 .menu {
@@ -321,7 +334,7 @@ body {
   transition-duration: 0.3s;
 }
 .menu a {
-  font-size: 1.5rem;
+  font-size: clamp(0.875rem, 0.7342406877rem + 0.5730659026vw, 1.25rem);
 }
 .menu.open {
   transform: translateX(0);
@@ -330,6 +343,15 @@ body {
   transition-duration: 0.3s;
 }
 
+@media (min-width: 969px) {
+  .menu {
+    flex-direction: row;
+    transform: none;
+    visibility: visible;
+    opacity: 1;
+    position: static;
+  }
+}
 .burger {
   display: flex;
   flex-direction: column;
@@ -343,6 +365,28 @@ body {
   width: 1rem;
   background-color: var(--color-accent-2);
   border-radius: var(--border-radius-base);
+  transition-duration: 0.2s;
+}
+.burger.open {
+  padding-right: 0.25rem;
+}
+.burger.open span:nth-child(1) {
+  transform: rotate(45deg) translateX(14%);
+  transition-duration: 0.2s;
+}
+.burger.open span:nth-child(2) {
+  display: none;
+  transition-duration: 0.2s;
+}
+.burger.open span:nth-child(3) {
+  transform: rotate(-45deg) translateX(10%);
+  transition-duration: 0.2s;
+}
+
+@media (min-width: 969px) {
+  .burger {
+    display: none;
+  }
 }
 
 /*# sourceMappingURL=main.css.map */

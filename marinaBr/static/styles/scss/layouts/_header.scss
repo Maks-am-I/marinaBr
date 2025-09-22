@@ -32,3 +32,16 @@
         }
     }
 }
+
+@media (min-width: 969px) {
+    .header {
+        &__nav {
+            order: 2;
+            align-items: center;
+        }
+
+        &__cart {
+            order: 3;
+        }
+    }
+}
