@@ -33,15 +33,24 @@
     }
 }
 
-@media (min-width: 969px) {
+@media (min-width: 1200px) {
     .header {
+        padding-block: rem(16);
+
+
         &__nav {
             order: 2;
             align-items: center;
         }
 
         &__cart {
+            @include square(rem(60));
             order: 3;
+
+            img {
+                width: rem(24);
+                height: rem(32);
+            }
         }
     }
 }

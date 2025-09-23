@@ -1,0 +1,78 @@
+@use './../helpers/' as *;
+
+.main-form {
+    display: flex;
+    flex-direction: column;
+    gap: rem(50);
+    padding-bottom: rem(90);
+    max-width: rem(872);
+
+    &__title {
+        h2 {
+            @include fluid-text(36, 28);
+
+            text-align: center;
+
+            color: var(--color-font-accent-1);
+            font-weight: 400;
+            line-height: 1;
+            margin-bottom: rem(24);
+        }
+
+        p {
+            @include fluid-text(20, 16);
+
+            color: var(--color-font-accent-2);
+            font-weight: 400;
+            text-align: center;
+        }
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: rem(6);
+
+        label {
+            @include fluid-text(20, 16);
+
+            color: var(--color-font-accent-2);
+            font-weight: 400;
+        }
+
+        input:not(:last-of-type),
+        textarea {
+            margin-bottom: rem(12);
+        }
+
+        input:last-of-type {
+            margin: 0 auto;
+            padding-inline: rem(23);
+            color: var(--color-background);
+            background-color: var(--color-font-accent-1);
+            max-width: rem(227);
+        }
+
+        input, 
+        textarea {
+            padding: rem(5);
+            border-color: var(--color-font-accent-1);
+            border-radius: var(--border-radius-base);
+        }
+
+        textarea {
+            height: rem(90);
+        }
+    }
+}
+
+@media (min-width: 1200px) {
+    .main-form {
+        &__form {
+            input:last-of-type {
+                font-size: rem(16);
+                padding-inline: rem(55);
+            }
+        }
+    }
+}

@@ -18,11 +18,11 @@
                 <img src="{% static 'assets/icons/cart.svg' %}" alt="cart">
             </div>
             <nav class="header__menu menu" id="nav-menu">
-                <a>Условия заказа</a>
-                <a>Ассортимент</a>
-                <a>Контактная информация</a>
-                <a>Заказать обратный звонок</a>
-                <a>Корзина</a>
+                <a href="">Условия заказа</a>
+                <a href="">Ассортимент</a>
+                <a href="">Контактная информация</a>
+                <a href="">Заказать обратный звонок</a>
+                <a href="">Корзина</a>
             </nav>
             <div class="header__burger burger" id="burger">
                 <span class="burger__up-line"></span>
@@ -31,6 +31,30 @@
             </div>
         </div>
     </header>
+
+    <section class="container main-form">
+        <div class="main-form__title">
+            <h2>
+                Хотите обсудить нюансы по заказу или любой другой вопрос?
+            </h2>
+            <p>
+                Заполните форму и опишите свой вопрос. Я обязательно Вам перезвоню.
+            </p>
+        </div>
+        <form action="#" method="post" class="main-form__form">
+            <label for="name">Имя:</label>
+            <input type="text" name="name" id="name" placeholder="Имя">
+
+            <label for="phone">Номер телефона:</label>
+            <input type="tel" name="phone" id="phone" placeholder="+7 (999) 999 99 99">
+
+            <label for="question">Ваш вопрос:</label>
+            <textarea name="question" row=3 id="question"></textarea>
+
+            <input type="submit" value="Отправить">
+        </form>
+    </section>
+
     <footer class="footer container">
         <div class="footer__messengers">
             <div>

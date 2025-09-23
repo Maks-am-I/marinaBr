@@ -30,3 +30,13 @@
         min-width: rem(25);
     }
 }
+
+@media (min-width: 1200px) {
+    .footer {
+        &__messengers {
+            img {
+                width: rem(40);
+            }
+        }
+    }
+}

@@ -3,3 +3,9 @@
 .container {
     padding-inline: rem(16);
 }
+
+@media (min-width: 969px) {
+    .container {
+        padding-inline: rem(60);
+    }
+}
