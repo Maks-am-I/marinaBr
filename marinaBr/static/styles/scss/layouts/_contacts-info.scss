@@ -1,0 +1,38 @@
+@use './../helpers/' as *;
+
+.contacts-info {
+    padding-block: rem(40);
+
+    &__title {
+        h2 {
+            @include fluid-text(36, 23);
+
+            font-weight: 400;
+            text-align: center;
+        }
+    }
+
+    &__info {
+        @include fluid-text(24, 16);
+
+        border-radius: var(--border-radius-base);
+        background-color: var(--color-accent-2);
+        max-width: 90%;
+        margin: 0 auto;
+        padding: rem(15);
+
+        p:first-of-type {
+            margin-bottom: rem(36);
+        }
+    }
+}
+
+@media (min-width: 1200px) {
+    .contacts-info {
+        padding-block: rem(80);
+
+        &__info {
+            padding: rem(36);
+        }
+    }
+}
