@@ -11,7 +11,9 @@
 <body>
     <header class="header container">
         <div class="header__logo logo">
-            <img src="{% static 'assets/img/logo.svg' %}" alt="logo">
+            <a href="/">
+                <img src="{% static 'assets/img/logo.svg' %}" alt="logo">
+            </a>
         </div>
         <div class="header__nav">
             <div class="header__cart">
@@ -32,6 +34,57 @@
         </div>
     </header>
 
+    <section class="hero container">
+        <div class="hero__title">
+            <h1>
+                <span>Мария</span>
+                <span>Брюханова</span>
+            </h1>
+        </div>
+        <div class="hero__photo">
+            <img src="{% static 'assets/img/photos/photo.png' %}" alt="photo">
+        </div>
+        <div class="hero__about">
+            <p>
+                Приготовлю быстро и красиво <br>
+                на Ваш праздник
+            </p>
+
+            <ul class="hero__list-dishes">
+                <li>Гастробоксы</li>
+                <li>Фуршеты</li>
+            </ul>
+
+            <ul class="hero__list-towns">
+                <li>Сосновоборск</li>
+                <li>Железногорск</li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="conditions container">
+        <div>
+            <h2>
+                Условия заказа
+            </h2>
+            <ul>
+                <li>
+                    Заказ считается оформленным после внесения предоплаты в размере 50%
+                </li>
+                <li>
+                    Бесплатная доставка от 3000р по Сосновоборску, от 5000р 
+                    в Железногорск, Березовку и Подгорный. 
+                    В Красноярск доставка по тарифу Яндекс.Курьер
+                </li>
+                <li>
+                    ‼️Важно ‼️Срок хранения большинства закусок всего 
+                    несколько часов, поэтому оформляйте заказ к тому времени, 
+                    когда планируете садиться за стол.
+                </li>
+            </ul>
+        </div>
+    </section>
+
     <section class="contacts-info container">
         <div class="contacts-info__title">
             <h2>
@@ -49,7 +102,7 @@
         </div>
     </section>
 
-    <div class="map">
+    <div class="map container" style="width: 100%;">
         <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A91ccc6f30928f0e859e03e6ee01bfc8f28bf7be254d0933e1355b7b15f0d2923&amp;width=100%25&amp;height=551&amp;lang=ru_RU&amp;scroll=true"></script>
     </div>
 

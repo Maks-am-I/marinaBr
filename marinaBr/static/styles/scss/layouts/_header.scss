@@ -4,6 +4,7 @@
     position: sticky;
     top: 0;
     display: flex;
+    width: 100%;
     justify-content: space-between;
     align-items: center;
     padding-block: rem(4);
@@ -28,6 +29,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        min-width: rem(40);
+        min-height: rem(40);
 
         & img {
             margin-bottom: rem(3);

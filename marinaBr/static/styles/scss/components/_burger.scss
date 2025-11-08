@@ -5,14 +5,16 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: rem(1);
+    gap: rem(2);
+    min-width: rem(40);
+    min-height: rem(40);
 
     &__up-line,
     &__mid-line,
     &__bottom-line {
         display: inline-block;
-        height: rem(2);
-        width: rem(16);
+        height: rem(3);
+        width: rem(20);
         background-color: var(--color-accent-2);
         border-radius: var(--border-radius-base);
         transition-duration: 0.2s;
@@ -32,7 +34,7 @@
         }
         
         & span:nth-child(3) {
-            transform: rotate(-45deg) translateX(10%);
+            transform: rotate(-45deg) translateX(16%);
             transition-duration: 0.2s;
         }
     }

@@ -7,6 +7,7 @@
     gap: rem(12);
     padding: rem(12);
     background-color: var(--color-main);
+    border: rem(1) solid var(--color-font-base);
     border-radius: var(--border-radius-base);
 
     top: rem(86);
@@ -19,8 +20,7 @@
     transition-duration: 0.3s;
 
     & a {
-        @include fluid-text(20, 14);
-
+        font-size: rem(18);
         color: var(--color-font-base);
         text-decoration: none;
     }
@@ -40,6 +40,7 @@
         visibility: visible;
         opacity: 1;
         position: static;
+        border: none;
 
         a:not(:last-of-type) {
             padding-right: rem(10);

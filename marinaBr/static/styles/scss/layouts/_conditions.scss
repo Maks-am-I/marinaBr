@@ -1,0 +1,24 @@
+@use './../helpers/' as *;
+
+.conditions {
+
+    div {
+        padding-inline: rem(12);
+        padding-block: rem(6);
+        background-color: var(--color-accent-2);
+        border-radius: var(--border-radius-base);
+
+        h2 {
+            font-weight: 500;
+            text-align: center;
+        }
+
+        ul {
+            @include fluid-text(26, 18);
+
+            li:not(:last-of-type) {
+                margin-bottom: rem(20);
+            }
+        }
+    }
+}

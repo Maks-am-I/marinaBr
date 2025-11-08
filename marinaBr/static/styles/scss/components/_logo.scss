@@ -1,5 +1,11 @@
 @use '../helpers' as *;
 
+.logo {
+    img {
+        min-width: rem(70);
+    }
+}
+
 @media (min-width: 1200px) {
     .logo {
         img {
