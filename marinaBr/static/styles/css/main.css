@@ -683,6 +683,8 @@ body {
   }
 }
 .item {
+  display: flex;
+  flex-direction: column;
   min-width: 8.75rem;
   max-width: 19.5rem;
   height: auto;
@@ -709,6 +711,7 @@ body {
 }
 .item__buttons {
   padding-top: 1.5625rem;
+  margin-top: auto;
   display: flex;
   flex-direction: column;
   gap: 0.625rem;
