@@ -9,8 +9,11 @@
 @use './layouts/contacts-info';
 @use './layouts/hero';
 @use './layouts/conditions';
+@use './layouts/products';
 
 @use './components/logo';
 @use './components/menu';
 @use './components/burger';
 @use './components/form';
+@use './components/products-item';
+@use './components/button-config';

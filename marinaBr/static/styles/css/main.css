@@ -491,6 +491,48 @@ body {
   margin-bottom: 1.25rem;
 }
 
+.products {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 3.125rem;
+  width: 100%;
+}
+.products h2 {
+  font-size: clamp(1.4375rem, 1.0386819484rem + 1.623686724vw, 2.5rem);
+  font-weight: 500;
+}
+.products__list {
+  font-size: clamp(1rem, 0.6715616046rem + 1.3371537727vw, 1.875rem);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9375rem;
+  justify-content: center;
+}
+.products__list li {
+  display: inline-block;
+  text-align: center;
+  height: auto;
+  min-width: 3.75rem;
+  width: fit-content;
+  padding-block: 1vh;
+  padding-inline: 2vw;
+  background-color: var(--color-accent-2);
+  border-radius: 50vh;
+}
+.products__menu-products {
+  padding-top: 1.875rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 10rem), 1fr));
+  gap: 1rem;
+  width: 100%;
+}
+
+@media (min-width: 890px) {
+  .products__menu-products {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
 .logo img {
   min-width: 4.375rem;
 }
@@ -639,6 +681,65 @@ body {
     font-size: 1rem;
     padding-inline: 3.4375rem;
   }
+}
+.item {
+  min-width: 8.75rem;
+  max-width: 19.5rem;
+  height: auto;
+  padding: 0.75rem;
+  background-color: var(--color-accent-2);
+  border-radius: var(--border-radius-base);
+}
+.item__title h2 {
+  font-size: clamp(1.125rem, 0.9842406877rem + 0.5730659026vw, 1.5rem);
+  font-weight: 500;
+  line-height: 1;
+  text-align: center;
+}
+.item__title p {
+  font-size: clamp(1rem, 0.6246418338rem + 1.5281757402vw, 2rem);
+  color: var(--color-font-price);
+  font-weight: 600;
+  text-align: center;
+}
+.item__description {
+  padding-top: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.item__buttons {
+  padding-top: 1.5625rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+.item__buttons .button-to-card {
+  border: 1px solid var(--color-font-base);
+  border-radius: 50vh;
+  color: var(--color-font-base);
+  background-color: var(--color-background);
+  font-size: 1.125rem;
+}
+
+.button-config {
+  background-color: var(--color-background);
+  border: 1px solid var(--color-font-base);
+  border-radius: 50vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  overflow: hidden;
+  padding-inline: 0.3125rem;
+}
+.button-config button {
+  background-color: var(--color-background);
+  border: none;
+  color: var(--color-font-base);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.button-config span {
+  font-size: 1.25rem;
 }
 
 /*# sourceMappingURL=main.css.map */
