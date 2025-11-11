@@ -9,10 +9,18 @@ class Category(models.Model):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
+    def __str__(self):
+        return self.title
+
 class Product(models.Model):
     title = models.CharField(max_length=255, unique=True, verbose_name='Название')
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name='Цена')
+    price = models.DecimalField(max_digits=10, decimal_places=0, default=0, verbose_name='Цена')
+    priceAdditional = models.DecimalField(blank=True, null=True, max_digits=10, decimal_places=0, verbose_name='Цена за 120г')
+    priceFor = models.BooleanField(default=False, verbose_name='Цена за одну штуку')
     description = models.TextField(blank=True, null=True, verbose_name='Описание')
+    ingredients = models.TextField(blank=True, null=True, verbose_name='Состав')
+    ingredientsList = models.TextField(blank=True, null=True, help_text="Разделяйте ингредиенты через ';'", verbose_name='Состав списком')
+    availableFrom = models.DecimalField(blank=True, null=True, max_digits=10, decimal_places=0, verbose_name='Отпуск от (шт)')
     image = models.ImageField(upload_to='product_images', blank=True, null=True, verbose_name='Изображение')
     is_published = models.BooleanField(default=True, verbose_name='Опубликовать')
     category = models.ForeignKey(to=Category, on_delete=models.CASCADE, verbose_name='Категория')
@@ -21,3 +29,23 @@ class Product(models.Model):
         db_table = 'product'
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
+
+    def __str__(self):
+        return self.title
+    
+    def get_ingredients_list(self):
+        if self.ingredientsList:
+            return [ingredient.strip() for ingredient in self.ingredientsList.split(';')]
+        return []
+
+class ReadySolution(models.Model):
+    title = models.CharField(max_length=255, unique=True, verbose_name='Название')
+    price = models.DecimalField(max_digits=10, decimal_places=0, default=0, verbose_name='Цена')
+    # disheFirst = models.ForeignKey(to=Product, on_delete=models.PROTECT, verbose_name='Блюдо №1')
+    # disheSecond = models.ManyToManyField(to=Product, unique=True, blank=True, on_delete=models.PROTECT, verbose_name='Блюдо №2')
+    # disheThird = models.ManyToManyField(to=Product, unique=True, blank=True, on_delete=models.PROTECT, verbose_name='Блюдо №3')
+    # disheFourth = models.ManyToManyField(to=Product, unique=True, blank=True, on_delete=models.PROTECT, verbose_name='Блюдо №4')
+    # disheFifth = models.ManyToManyField(to=Product, unique=True, blank=True, on_delete=models.PROTECT, verbose_name='Блюдо №5')
+    # disheSixth = models.ManyToManyField(to=Product, unique=True, blank=True, on_delete=models.PROTECT, verbose_name='Блюдо №6')
+    # disheSeventh = models.ManyToManyField(to=Product, unique=True, blank=True, on_delete=models.PROTECT, verbose_name='Блюдо №7')
+    # disheEighth = models.ManyToManyField(to=Product, unique=True, blank=True, on_delete=models.PROTECT, verbose_name='Блюдо №8')

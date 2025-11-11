@@ -27,9 +27,22 @@
     }
 
     &__description {
+        display: flex;
+        flex-direction: column;
+        gap: rem(10);
         padding-top: rem(15);
         font-weight: 500;
         line-height: 1.2;
+
+        ul {
+            padding-left: rem(13);
+            padding-bottom: rem(10);
+            list-style-type: disc;
+
+            li:not(:last-of-type) {
+                margin-bottom: rem(10);
+            }
+        }
     }
 
     &__buttons {
@@ -45,6 +58,16 @@
             color: var(--color-font-base);
             background-color: var(--color-background);
             font-size: rem(18);
+        }
+    }
+}
+
+@media (min-width: 960px) {
+    .item {
+        &__description {
+            ul {
+                padding-left: rem(20);
+            }
         }
     }
 }

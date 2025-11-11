@@ -1,14 +1,18 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-from .models import Product
+from .models import Product, Category
 
+from django.db.models.functions import Length
 
 def index(request):
-    products = Product.objects.all()
+    categories = Category.objects.annotate(name_length=Length('title')).order_by('name_length')
+    products = Product.objects.filter(is_published='True')
+
 
     context = {
-        'products':products
+        'categories': categories,
+        'products' : products,
     }
 
     return render(request, 'core/index.html', context)
