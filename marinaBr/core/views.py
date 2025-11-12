@@ -9,7 +9,6 @@ def index(request):
     categories = Category.objects.annotate(name_length=Length('title')).order_by('name_length')
     products = Product.objects.filter(is_published='True')
 
-
     context = {
         'categories': categories,
         'products' : products,

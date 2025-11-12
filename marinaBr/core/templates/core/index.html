@@ -98,9 +98,11 @@
 
             {% for product in products %}
             <li class="menu-products__item item">
-                <div class="item__photo">
-                    <img src="{% static 'assets/img/photos/products/item-1.png' %}" alt="">
-                </div>
+                {% if product.imageMain %}
+                    <div class="item__photo">
+                        <img src="{{ product.imageMain.url }}" alt="">
+                    </div>
+                {% endif %}
 
                 <div class="item__title">
                     <h2>

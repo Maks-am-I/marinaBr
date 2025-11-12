@@ -1,4 +1,5 @@
 from django.db import models
+# from django.urls import reverse
 
 class Category(models.Model):
     title = models.CharField(max_length=100, unique=True, verbose_name="Название")
@@ -11,9 +12,13 @@ class Category(models.Model):
 
     def __str__(self):
         return self.title
+    
+def product_image_path(instance, fileName):
+    return f'product_images/{instance.slug}/{fileName}'
 
 class Product(models.Model):
     title = models.CharField(max_length=255, unique=True, verbose_name='Название')
+    slug = models.SlugField(max_length=255, unique=True, null=True, blank=True, verbose_name='URL')
     price = models.DecimalField(max_digits=10, decimal_places=0, default=0, verbose_name='Цена')
     priceAdditional = models.DecimalField(blank=True, null=True, max_digits=10, decimal_places=0, verbose_name='Цена за 120г')
     priceFor = models.BooleanField(default=False, verbose_name='Цена за одну штуку')
@@ -21,7 +26,9 @@ class Product(models.Model):
     ingredients = models.TextField(blank=True, null=True, verbose_name='Состав')
     ingredientsList = models.TextField(blank=True, null=True, help_text="Разделяйте ингредиенты через ';'", verbose_name='Состав списком')
     availableFrom = models.DecimalField(blank=True, null=True, max_digits=10, decimal_places=0, verbose_name='Отпуск от (шт)')
-    image = models.ImageField(upload_to='product_images', blank=True, null=True, verbose_name='Изображение')
+    imageMain = models.ImageField(upload_to=product_image_path, blank=True, null=True, verbose_name='Главное изображение')
+    imageSecond = models.ImageField(upload_to=product_image_path, blank=True, null=True, verbose_name='Дополнительное изображение')
+    imageThird = models.ImageField(upload_to=product_image_path, blank=True, null=True, verbose_name='Дополнительное изображение')
     is_published = models.BooleanField(default=True, verbose_name='Опубликовать')
     category = models.ForeignKey(to=Category, on_delete=models.CASCADE, verbose_name='Категория')
 
