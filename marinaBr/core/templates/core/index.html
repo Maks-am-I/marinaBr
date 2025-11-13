@@ -32,6 +32,8 @@
                 <span class="burger__bottom-line"></span>
             </div>
         </div>
+        <a href="#" class="button-up" id="button-up">
+        </a>
     </header>
 
     <section class="hero container">
@@ -87,20 +89,20 @@
 
     <section class="products container">
         <h2>Ассортимент</h2>
-        <ul class="products__list">
+        <ul class="products__list" id="list-categoties">
             {% for category in categories %}
-                <li>
+                <li id="{{ category.id }}">
                     {{ category.title }}
                 </li>
             {% endfor %}
         </ul>
-        <ul class="products__menu-products menu-products">
+        <ul class="products__menu-products menu-products" id='list-products'>
 
             {% for product in products %}
-            <li class="menu-products__item item">
+            <li class="menu-products__item item" context="{{ product.category.id }}">
                 {% if product.imageMain %}
                     <div class="item__photo">
-                        <img src="{{ product.imageMain.url }}" alt="">
+                        <img src="{{ product.imageMain.url }}" alt="{{ product.title }}">
                     </div>
                 {% endif %}
 
@@ -237,5 +239,6 @@
     </footer>
 
     <script src="{% static 'scripts/burger.js' %}"></script>
+    <script src="{% static 'scripts/buttonUp.js' %}"></script>
 </body>
 </html>
