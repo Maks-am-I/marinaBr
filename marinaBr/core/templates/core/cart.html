@@ -1,0 +1,181 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/css/main.css' %}">
+    <title>Корзина - Maria Br</title>
+</head>
+<body>
+    <header class="header container">
+        <div class="header__logo logo">
+            <a href="{% url 'index' %}">
+                <img src="{% static 'assets/img/logo.svg' %}" alt="logo">
+            </a>
+        </div>
+        <div class="header__nav">
+            <div class="header__cart">
+                <a href="{% url 'cart' %}">
+                    <img src="{% static 'assets/icons/cart.svg' %}" alt="cart">
+                    {% if cart_total > 0 %}
+                        <span class="cart-badge">{{ cart_total }}</span>
+                    {% endif %}
+                </a>
+            </div>
+            <nav class="header__menu menu" id="nav-menu">
+                <a href="{% url 'index' %}">Главная</a>
+                <a href="{% url 'index' %}#conditions">Условия заказа</a>
+                <a href="{% url 'index' %}#products">Ассортимент</a>
+                <a href="{% url 'index' %}#contacts">Контактная информация</a>
+            </nav>
+            <div class="header__burger burger" id="burger">
+                <span class="burger__up-line"></span>
+                <span class="burger__mid-line"></span>
+                <span class="burger__bottom-line"></span>
+            </div>
+        </div>
+    </header>
+
+    <section class="cart container">
+        <h1 class="cart__title">Ваш заказ:</h1>
+        
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="notification notification-{{ message.tags }} show">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        {% if cart_items %}
+            <div class="cart__divider"></div>
+            
+            <div class="cart__items">
+                {% for item in cart_items %}
+                    <div class="cart-item" data-product-id="{{ item.product.id }}">
+                        {% if item.product.imageMain %}
+                            <div class="cart-item__image">
+                                <img src="{{ item.product.imageMain.url }}" alt="{{ item.product.title }}">
+                            </div>
+                        {% else %}
+                            <div class="cart-item__image cart-item__image-placeholder">
+                                <span>Нет фото</span>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="cart-item__name">
+                            <span>{{ item.product.title }}</span>
+                        </div>
+                        
+                        <div class="cart-item__quantity">
+                            <div class="button-config">
+                                <button type="button" class="decrease-btn" data-product-id="{{ item.product.id }}">-</button>
+                                <span class="quantity-display">{{ item.quantity }}</span>
+                                <button type="button" class="increase-btn" data-product-id="{{ item.product.id }}">+</button>
+                            </div>
+                        </div>
+                        
+                        <div class="cart-item__price">
+                            <span class="item-price">{{ item.product.price }} ₽</span>
+                        </div>
+                        
+                        <div class="cart-item__remove">
+                            <button type="button" class="remove-btn" data-product-id="{{ item.product.id }}">×</button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <div class="cart__divider"></div>
+            
+            <div class="cart__summary-top">
+                <span class="cart__summary-label">Сумма:</span>
+                <span class="cart__summary-value" id="cart-total-price">{{ total_price }} ₽</span>
+            </div>
+            
+            <form method="post" action="{% url 'create_order' %}" class="cart__order-form" id="order-form">
+                {% csrf_token %}
+                <div class="order-form__field">
+                    <label for="id_customer_name">Ваше имя</label>
+                    <input type="text" name="customer_name" id="id_customer_name" placeholder="Иван Иванов" value="{{ form.customer_name.value|default:'' }}" required>
+                    {% if form.customer_name.errors %}
+                        <span class="form-error">{{ form.customer_name.errors.0 }}</span>
+                    {% endif %}
+                </div>
+                
+                <div class="order-form__field">
+                    <label for="id_customer_phone">Ваш номер телефона</label>
+                    <input type="tel" name="customer_phone" id="id_customer_phone" placeholder="+7 (999) 999 99 99" value="{{ form.customer_phone.value|default:'' }}" required>
+                    {% if form.customer_phone.errors %}
+                        <span class="form-error">{{ form.customer_phone.errors.0 }}</span>
+                    {% endif %}
+                </div>
+                
+                <div class="order-form__field">
+                    <label for="id_order_date">Дата заказа</label>
+                    <input type="date" name="order_date" id="id_order_date" value="{{ form.order_date.value|default:'' }}" min="{% now 'Y-m-d' %}" required>
+                    {% if form.order_date.errors %}
+                        <span class="form-error">{{ form.order_date.errors.0 }}</span>
+                    {% endif %}
+                </div>
+                
+                <div class="order-form__field">
+                    <label for="id_order_time">Время заказа</label>
+                    <input type="time" name="order_time" id="id_order_time" value="{{ form.order_time.value|default:'' }}" required>
+                    {% if form.order_time.errors %}
+                        <span class="form-error">{{ form.order_time.errors.0 }}</span>
+                    {% endif %}
+                </div>
+                
+                <div class="order-form__field">
+                    <label for="id_delivery_address">Адрес доставки</label>
+                    <input type="text" name="delivery_address" id="id_delivery_address" placeholder="Ленина, д. 1, кв. 1" value="{{ form.delivery_address.value|default:'' }}" required>
+                    {% if form.delivery_address.errors %}
+                        <span class="form-error">{{ form.delivery_address.errors.0 }}</span>
+                    {% endif %}
+                </div>
+                
+                <div class="cart__summary-bottom">
+                    <span class="cart__summary-label">Сумма:</span>
+                    <span class="cart__summary-value" id="cart-total-price-bottom">{{ total_price }} ₽</span>
+                </div>
+                
+                <button type="submit" class="button-order">Оформить заказ</button>
+            </form>
+        {% else %}
+            <div class="cart__empty">
+                <p>Ваша корзина пуста</p>
+                <a href="{% url 'index' %}" class="button-continue">Вернуться к покупкам</a>
+            </div>
+        {% endif %}
+    </section>
+
+    <footer class="footer container">
+        <div class="footer__messengers">
+            <div>
+                <a href="http://">
+                    <img src="{% static 'assets/icons/vk.svg' %}" alt="VK">
+                </a>
+            </div>
+            <div>
+                <a href="http://">
+                    <img src="{% static 'assets/icons/whatsapp.svg' %}" alt="whatsapp">
+                </a>
+            </div>
+        </div>
+        <address>
+            <a href="tel:+79535965520">+7(953)596-55-20</a>
+            <a href="https://yandex.ru/maps/-/CLUFzZ~w">
+                Сосновоборск, улица Ленинского Комсомола, 25 
+            </a>
+        </address>
+    </footer>
+
+    <script src="{% static 'scripts/burger.js' %}"></script>
+    <script src="{% static 'scripts/cart.js' %}"></script>
+</body>
+</html>

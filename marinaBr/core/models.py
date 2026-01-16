@@ -45,14 +45,44 @@ class Product(models.Model):
             return [ingredient.strip() for ingredient in self.ingredientsList.split(';')]
         return []
 
-class ReadySolution(models.Model):
-    title = models.CharField(max_length=255, unique=True, verbose_name='Название')
-    price = models.DecimalField(max_digits=10, decimal_places=0, default=0, verbose_name='Цена')
-    # disheFirst = models.ForeignKey(to=Product, on_delete=models.PROTECT, verbose_name='Блюдо №1')
-    # disheSecond = models.ManyToManyField(to=Product, unique=True, blank=True, on_delete=models.PROTECT, verbose_name='Блюдо №2')
-    # disheThird = models.ManyToManyField(to=Product, unique=True, blank=True, on_delete=models.PROTECT, verbose_name='Блюдо №3')
-    # disheFourth = models.ManyToManyField(to=Product, unique=True, blank=True, on_delete=models.PROTECT, verbose_name='Блюдо №4')
-    # disheFifth = models.ManyToManyField(to=Product, unique=True, blank=True, on_delete=models.PROTECT, verbose_name='Блюдо №5')
-    # disheSixth = models.ManyToManyField(to=Product, unique=True, blank=True, on_delete=models.PROTECT, verbose_name='Блюдо №6')
-    # disheSeventh = models.ManyToManyField(to=Product, unique=True, blank=True, on_delete=models.PROTECT, verbose_name='Блюдо №7')
-    # disheEighth = models.ManyToManyField(to=Product, unique=True, blank=True, on_delete=models.PROTECT, verbose_name='Блюдо №8')
+class Order(models.Model):
+    STATUS_CHOICES = [
+        ('new', 'Новый'),
+        ('processing', 'В обработке'),
+        ('completed', 'Завершен'),
+        ('cancelled', 'Отменен'),
+    ]
+    
+    customer_name = models.CharField(max_length=255, verbose_name='Имя клиента')
+    customer_phone = models.CharField(max_length=20, verbose_name='Телефон')
+    order_date = models.DateField(verbose_name='Дата заказа')
+    order_time = models.TimeField(verbose_name='Время заказа')
+    delivery_address = models.TextField(verbose_name='Адрес доставки')
+    total_price = models.DecimalField(max_digits=10, decimal_places=0, verbose_name='Общая сумма')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new', verbose_name='Статус')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлен')
+    
+    class Meta:
+        db_table = 'order'
+        verbose_name = 'Заказ'
+        verbose_name_plural = 'Заказы'
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f'Заказ #{self.id} от {self.customer_name}'
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items', verbose_name='Заказ')
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, verbose_name='Товар')
+    quantity = models.PositiveIntegerField(verbose_name='Количество')
+    price = models.DecimalField(max_digits=10, decimal_places=0, verbose_name='Цена')
+    
+    class Meta:
+        db_table = 'order_item'
+        verbose_name = 'Товар в заказе'
+        verbose_name_plural = 'Товары в заказе'
+    
+    def __str__(self):
+        return f'{self.product.title} x{self.quantity}'

@@ -3,6 +3,7 @@
 .header {
     position: sticky;
     top: 0;
+    z-index: 1001;
     display: flex;
     width: 100%;
     justify-content: space-between;
@@ -11,6 +12,7 @@
     border-bottom-left-radius: var(--border-radius-base);
     border-bottom-right-radius: var(--border-radius-base);
     background-color: var(--color-main);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
     &__nav {
         display: flex;
@@ -31,6 +33,16 @@
         align-items: center;
         min-width: rem(40);
         min-height: rem(40);
+        position: relative;
+
+        a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
 
         & img {
             margin-bottom: rem(3);

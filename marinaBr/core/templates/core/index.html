@@ -17,14 +17,19 @@
         </div>
         <div class="header__nav">
             <div class="header__cart">
-                <img src="{% static 'assets/icons/cart.svg' %}" alt="cart">
+                <a href="{% url 'cart' %}">
+                    <img src="{% static 'assets/icons/cart.svg' %}" alt="cart">
+                    {% if cart_total > 0 %}
+                        <span class="cart-badge">{{ cart_total }}</span>
+                    {% endif %}
+                </a>
             </div>
             <nav class="header__menu menu" id="nav-menu">
-                <a href="">Условия заказа</a>
-                <a href="">Ассортимент</a>
-                <a href="">Контактная информация</a>
-                <a href="">Заказать обратный звонок</a>
-                <a href="">Корзина</a>
+                <a href="#conditions">Условия заказа</a>
+                <a href="#products">Ассортимент</a>
+                <a href="#contacts">Контактная информация</a>
+                <a href="#form">Заказать обратный звонок</a>
+                <a href="{% url 'cart' %}">Корзина</a>
             </nav>
             <div class="header__burger burger" id="burger">
                 <span class="burger__up-line"></span>
@@ -64,7 +69,7 @@
         </div>
     </section>
 
-    <section class="conditions container">
+    <section class="conditions container" id="conditions">
         <div>
             <h2>
                 Условия заказа
@@ -87,7 +92,7 @@
         </div>
     </section>
 
-    <section class="products container">
+    <section class="products container" id="products">
         <h2>Ассортимент</h2>
         <ul class="products__list" id="list-categoties">
             {% for category in categories %}
@@ -99,7 +104,7 @@
         <ul class="products__menu-products menu-products" id='list-products'>
 
             {% for product in products %}
-            <li class="menu-products__item item" context="{{ product.category.id }}">
+            <li class="menu-products__item item" context="{{ product.category.id }}" data-product-id="{{ product.id }}">
                 {% if product.imageMain %}
                     <div class="item__photo">
                         <img src="{{ product.imageMain.url }}" alt="{{ product.title }}">
@@ -160,11 +165,11 @@
 
                 <div class="item__buttons">
                     <div class="button-config">
-                        <button type="button">-</button>
-                        <span>1</span>
-                        <button type="button">+</button>
+                        <button type="button" class="decrease-qty">-</button>
+                        <span class="item-quantity">1</span>
+                        <button type="button" class="increase-qty">+</button>
                     </div>
-                    <button class="button-to-card" type="button">
+                    <button class="button-to-card" type="button" data-product-id="{{ product.id }}">
                         В корзину
                     </button>
                 </div>
@@ -173,7 +178,7 @@
         </ul>
     </section>
 
-    <section class="contacts-info container">
+    <section class="contacts-info container" id="contacts">
         <div class="contacts-info__title">
             <h2>
                 Контактная информация
@@ -194,7 +199,7 @@
         <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A91ccc6f30928f0e859e03e6ee01bfc8f28bf7be254d0933e1355b7b15f0d2923&amp;width=100%25&amp;height=551&amp;lang=ru_RU&amp;scroll=true"></script>
     </div>
 
-    <section class="container main-form">
+    <section class="container main-form" id="form">
         <div class="main-form__title">
             <h2>
                 Хотите обсудить нюансы по заказу или любой другой вопрос?
@@ -240,5 +245,6 @@
 
     <script src="{% static 'scripts/burger.js' %}"></script>
     <script src="{% static 'scripts/buttonUp.js' %}"></script>
+    <script src="{% static 'scripts/cart.js' %}"></script>
 </body>
 </html>
