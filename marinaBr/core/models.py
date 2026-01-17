@@ -16,6 +16,9 @@ class Category(models.Model):
 def product_image_path(instance, fileName):
     return f'product_images/{instance.slug}/{fileName}'
 
+def ready_solution_image_path(instance, fileName):
+    return f'ready_solutions/{instance.slug}/{fileName}'
+
 class Product(models.Model):
     title = models.CharField(max_length=255, unique=True, verbose_name='Название')
     slug = models.SlugField(max_length=255, unique=True, null=True, blank=True, verbose_name='URL')
@@ -84,6 +87,79 @@ class ProductBundleItem(models.Model):
     
     def __str__(self):
         return f'{self.bundle.title} → {self.product.title} x{self.quantity}'
+
+
+class ReadySolution(models.Model):
+    """Готовые решения (меню на N человек)"""
+    PERSONS_COUNT_CHOICES = [
+        (10, '10 человек'),
+        (15, '15 человек'),
+    ]
+    
+    title = models.CharField(max_length=255, verbose_name='Название')
+    slug = models.SlugField(max_length=255, null=True, blank=True, verbose_name='URL')
+    price = models.DecimalField(max_digits=10, decimal_places=0, default=0, verbose_name='Цена')
+    description = models.TextField(blank=True, null=True, verbose_name='Описание')
+    image_main = models.ImageField(upload_to=ready_solution_image_path, blank=True, null=True, verbose_name='Главное изображение')
+    persons_count = models.PositiveIntegerField(
+        choices=PERSONS_COUNT_CHOICES,
+        verbose_name='Количество персон',
+        help_text='Выберите количество персон: 10 или 15'
+    )
+    is_published = models.BooleanField(default=True, verbose_name='Опубликовать')
+    products = models.ManyToManyField(
+        Product,
+        through='ReadySolutionItem',
+        related_name='ready_solutions',
+        verbose_name='Товары в составе',
+        limit_choices_to={'is_bundle': False}
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Обновлен')
+    
+    class Meta:
+        db_table = 'ready_solution'
+        verbose_name = 'Готовое решение'
+        verbose_name_plural = 'Готовые решения'
+        ordering = ['persons_count', 'title']
+        unique_together = [('title', 'persons_count'), ('slug', 'persons_count')]
+    
+    def __str__(self):
+        return f'{self.title} ({self.persons_count} чел.)'
+    
+    def get_items(self):
+        """Получить компоненты готового решения"""
+        return self.items.all().order_by('order', 'product__title')
+
+
+class ReadySolutionItem(models.Model):
+    """Товары в составе готового решения"""
+    ready_solution = models.ForeignKey(
+        ReadySolution,
+        on_delete=models.CASCADE,
+        related_name='items',
+        verbose_name='Готовое решение'
+    )
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.PROTECT,
+        related_name='in_ready_solutions',
+        verbose_name='Товар в составе',
+        limit_choices_to={'is_bundle': False}
+    )
+    quantity = models.PositiveIntegerField(default=1, verbose_name='Количество')
+    order = models.PositiveIntegerField(default=0, verbose_name='Порядок отображения')
+    
+    class Meta:
+        db_table = 'ready_solution_item'
+        verbose_name = 'Товар в готовом решении'
+        verbose_name_plural = 'Товары в готовых решениях'
+        ordering = ['order', 'product__title']
+        unique_together = ['ready_solution', 'product']
+    
+    def __str__(self):
+        return f'{self.ready_solution.title} → {self.product.title} x{self.quantity}'
+
 
 class Order(models.Model):
     STATUS_CHOICES = [

@@ -14,21 +14,59 @@ document.addEventListener('DOMContentLoaded', function() {
     function filterProducts(categoryId) {
         let visibleCount = 0;
         
+        // Найти обертку готовых решений, если она есть
+        const readySolutionsWrapper = productList.querySelector('.ready-solutions-wrapper');
+        
         productItems.forEach(productItem => {
+            // Пропускаем элементы, которые находятся внутри обертки готовых решений
+            if (productItem.closest('.ready-solutions-wrapper')) {
+                return;
+            }
+            
             const productCategoryId = productItem.getAttribute('context');
             
-            if (categoryId === 'all' || productCategoryId === categoryId) {
+            // Показывать товар, если:
+            // 1. Выбрано "Все" - показываем все товары (НЕ включая готовые решения)
+            // 2. Выбрана категория "Готовые решения" - скрываем все обычные товары
+            // 3. Выбрана обычная категория - показываем только товары этой категории
+            if (categoryId === 'all') {
+                // Показываем все товары (готовые решения обрабатываются отдельно)
                 productItem.style.display = '';
-                // Плавное появление
                 productItem.style.opacity = '0';
                 setTimeout(() => {
                     productItem.style.opacity = '1';
                 }, 10);
                 visibleCount++;
-            } else {
+            } else if (categoryId === 'ready_solutions') {
+                // Скрываем все обычные товары при выборе готовых решений
                 productItem.style.display = 'none';
+            } else {
+                // Показываем только товары выбранной категории
+                if (productCategoryId === categoryId) {
+                    productItem.style.display = '';
+                    productItem.style.opacity = '0';
+                    setTimeout(() => {
+                        productItem.style.opacity = '1';
+                    }, 10);
+                    visibleCount++;
+                } else {
+                    productItem.style.display = 'none';
+                }
             }
         });
+        
+        // Обработка обертки готовых решений
+        if (readySolutionsWrapper) {
+            if (categoryId === 'ready_solutions') {
+                readySolutionsWrapper.style.display = '';
+                readySolutionsWrapper.style.opacity = '0';
+                setTimeout(() => {
+                    readySolutionsWrapper.style.opacity = '1';
+                }, 10);
+            } else {
+                readySolutionsWrapper.style.display = 'none';
+            }
+        }
         
         return visibleCount > 0;
     }

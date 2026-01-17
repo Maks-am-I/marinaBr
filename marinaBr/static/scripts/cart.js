@@ -62,6 +62,96 @@ function addToCart(productId, quantity = 1) {
     });
 }
 
+// Добавить готовое решение в корзину
+function addReadySolutionToCart(solutionId, quantity = 1) {
+    const formData = new FormData();
+    formData.append('quantity', quantity);
+    formData.append('csrfmiddlewaretoken', csrftoken);
+
+    fetch(`/cart/add-solution/${solutionId}/`, {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            updateCartBadge(data.cart_total);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Ошибка при добавлении готового решения', 'error');
+    });
+}
+
+// Удалить готовое решение из корзины
+function removeReadySolutionFromCart(solutionId) {
+    const formData = new FormData();
+    formData.append('csrfmiddlewaretoken', csrftoken);
+
+    fetch(`/cart/remove-solution/${solutionId}/`, {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            updateCartBadge(data.cart_total);
+            // Удалить элемент из DOM
+            const cartItem = document.querySelector(`.cart-item[data-ready-solution-id="${solutionId}"]`);
+            if (cartItem) {
+                cartItem.remove();
+                // Обновить общую сумму
+                updateTotalPrice(data.total_price);
+                // Проверить, пуста ли корзина
+                checkEmptyCart();
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Ошибка при удалении готового решения', 'error');
+    });
+}
+
+// Обновить количество готового решения
+function updateReadySolutionCartItem(solutionId, quantity) {
+    const formData = new FormData();
+    formData.append('quantity', quantity);
+    formData.append('csrfmiddlewaretoken', csrftoken);
+
+    fetch(`/cart/update-solution/${solutionId}/`, {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            updateCartBadge(data.cart_total);
+            // Обновить отображение количества
+            const quantityDisplay = document.querySelector(`.cart-item[data-ready-solution-id="${solutionId}"] .quantity-display`);
+            if (quantityDisplay) {
+                quantityDisplay.textContent = quantity;
+            }
+            // Обновить общую сумму
+            updateTotalPrice(data.total_price);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Ошибка при обновлении количества', 'error');
+    });
+}
+
 // Удалить товар из корзины
 function removeFromCart(productId) {
     const formData = new FormData();
@@ -177,8 +267,8 @@ function showNotification(message, type = 'success') {
 
 // Обработчики для главной страницы
 document.addEventListener('DOMContentLoaded', function() {
-    // Кнопки "В корзину"
-    const addToCartButtons = document.querySelectorAll('.button-to-card');
+    // Кнопки "В корзину" для обычных продуктов
+    const addToCartButtons = document.querySelectorAll('.button-to-card:not(.button-ready-solution)');
     addToCartButtons.forEach(button => {
         button.addEventListener('click', function() {
             const productId = this.getAttribute('data-product-id');
@@ -188,6 +278,21 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (productId) {
                 addToCart(productId, quantity);
+            }
+        });
+    });
+    
+    // Кнопки "В корзину" для готовых решений
+    const addReadySolutionButtons = document.querySelectorAll('.button-ready-solution');
+    addReadySolutionButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const solutionId = this.getAttribute('data-ready-solution-id');
+            const bundleItem = this.closest('.bundle-item');
+            const quantityInput = bundleItem.querySelector('.item-quantity');
+            const quantity = quantityInput ? parseInt(quantityInput.textContent) : 1;
+            
+            if (solutionId) {
+                addReadySolutionToCart(solutionId, quantity);
             }
         });
     });
@@ -250,13 +355,50 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Кнопки удаления
+    // Кнопки увеличения количества для готовых решений
+    const increaseSolutionButtons = document.querySelectorAll('.increase-btn-solution');
+    increaseSolutionButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const solutionId = this.getAttribute('data-ready-solution-id');
+            const quantitySpan = this.parentElement.querySelector('.quantity-display');
+            let quantity = parseInt(quantitySpan.textContent);
+            quantity++;
+            updateReadySolutionCartItem(solutionId, quantity);
+        });
+    });
+    
+    // Кнопки уменьшения количества для готовых решений
+    const decreaseSolutionButtons = document.querySelectorAll('.decrease-btn-solution');
+    decreaseSolutionButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const solutionId = this.getAttribute('data-ready-solution-id');
+            const quantitySpan = this.parentElement.querySelector('.quantity-display');
+            let quantity = parseInt(quantitySpan.textContent);
+            if (quantity > 1) {
+                quantity--;
+                updateReadySolutionCartItem(solutionId, quantity);
+            }
+        });
+    });
+    
+    // Кнопки удаления для продуктов
     const removeButtons = document.querySelectorAll('.remove-btn');
     removeButtons.forEach(button => {
         button.addEventListener('click', function() {
             const productId = this.getAttribute('data-product-id');
             if (confirm('Удалить товар из корзины?')) {
                 removeFromCart(productId);
+            }
+        });
+    });
+    
+    // Кнопки удаления для готовых решений
+    const removeSolutionButtons = document.querySelectorAll('.remove-btn-solution');
+    removeSolutionButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const solutionId = this.getAttribute('data-ready-solution-id');
+            if (confirm('Удалить готовое решение из корзины?')) {
+                removeReadySolutionFromCart(solutionId);
             }
         });
     });

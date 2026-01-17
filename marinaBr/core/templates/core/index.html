@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="{% static 'assets/img/logo.svg' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'styles/css/main.css' %}">
     <title>Maria Br</title>
 </head>
@@ -103,66 +104,6 @@
         </div>
     </section>
 
-    {% if bundle_products %}
-    <section class="bundles container" id="bundles">
-        <h2>Готовые решения</h2>
-        <div class="bundles__grid">
-            {% for bundle in bundle_products %}
-            <div class="bundle-item" data-product-id="{{ bundle.id }}">
-                {% if bundle.imageMain %}
-                    <div class="bundle-item__image">
-                        <img src="{{ bundle.imageMain.url }}" alt="{{ bundle.title }}">
-                    </div>
-                {% endif %}
-                
-                <div class="bundle-item__header">
-                    <h3 class="bundle-item__title">{{ bundle.title }}</h3>
-                    {% if bundle.description %}
-                        <p class="bundle-item__subtitle">{{ bundle.description }}</p>
-                    {% endif %}
-                </div>
-                
-                {% if bundle.get_bundle_items %}
-                    <div class="bundle-item__content">
-                        {% for bundle_item in bundle.get_bundle_items %}
-                            <div class="bundle-item__component">
-                                {% if bundle_item.product.imageMain %}
-                                    <div class="bundle-item__component-image">
-                                        <img src="{{ bundle_item.product.imageMain.url }}" alt="{{ bundle_item.product.title }}">
-                                    </div>
-                                {% endif %}
-                                <div class="bundle-item__component-info">
-                                    <p class="bundle-item__component-name">{{ bundle_item.product.title }}</p>
-                                    {% if bundle_item.quantity > 1 %}
-                                        <p class="bundle-item__component-quantity">× {{ bundle_item.quantity }}</p>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                
-                <div class="bundle-item__footer">
-                    <div class="bundle-item__price">
-                        <span class="bundle-item__price-value">{{ bundle.price }} ₽</span>
-                    </div>
-                    <div class="bundle-item__buttons">
-                        <div class="button-config">
-                            <button type="button" class="decrease-qty">-</button>
-                            <span class="item-quantity">1</span>
-                            <button type="button" class="increase-qty">+</button>
-                        </div>
-                        <button class="button-to-card" type="button" data-product-id="{{ bundle.id }}">
-                            В корзину
-                        </button>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </section>
-    {% endif %}
-
     <section class="products container" id="products">
         <h2>Ассортимент</h2>
         <ul class="products__list" id="list-categoties">
@@ -171,8 +112,108 @@
                     {{ category.title }}
                 </li>
             {% endfor %}
+            {% if ready_solutions %}
+                <li id="ready_solutions" class="category-filter">
+                    Готовые решения
+                </li>
+            {% endif %}
         </ul>
         <ul class="products__menu-products menu-products" id='list-products'>
+            {% if ready_solutions_10 or ready_solutions_15 %}
+                <li class="ready-solutions-wrapper" context="ready_solutions" data-type="ready_solutions_group">
+                    <div class="ready-solutions-container">
+                        {% if ready_solutions_10 %}
+                            <div class="ready-solutions-column ready-solutions-10">
+                                <h3 class="ready-solutions-column__title">Меню на 10 человек</h3>
+                                <div class="ready-solutions-column__items">
+                                    {% for solution in ready_solutions_10 %}
+                                        <div class="bundle-item" data-ready-solution-id="{{ solution.id }}" data-type="ready_solution">
+                                            <div class="bundle-item__title-top">
+                                                <h2>{{ solution.title }}</h2>
+                                            </div>
+
+                                            {% if solution.get_items %}
+                                                <div class="bundle-item__images-grid">
+                                                    {% for item in solution.get_items %}
+                                                        {% if item.product.imageMain %}
+                                                            <div class="bundle-item__image-with-title">
+                                                                <div class="bundle-item__image-small">
+                                                                    <img src="{{ item.product.imageMain.url }}" alt="{{ item.product.title }}">
+                                                                </div>
+                                                                <p class="bundle-item__product-name">{{ item.product.title }}{% if item.quantity > 1 %} × {{ item.quantity }}{% endif %}</p>
+                                                            </div>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+
+                                            <div class="bundle-item__price-section">
+                                                <p class="bundle-item__price">{{ solution.price }} ₽</p>
+                                            </div>
+
+                                            <div class="item__buttons">
+                                                <div class="button-config">
+                                                    <button type="button" class="decrease-qty">-</button>
+                                                    <span class="item-quantity">1</span>
+                                                    <button type="button" class="increase-qty">+</button>
+                                                </div>
+                                                <button class="button-to-card button-ready-solution" type="button" data-ready-solution-id="{{ solution.id }}">
+                                                    В корзину
+                                                </button>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if ready_solutions_15 %}
+                            <div class="ready-solutions-column ready-solutions-15">
+                                <h3 class="ready-solutions-column__title">Меню на 15 человек</h3>
+                                <div class="ready-solutions-column__items">
+                                    {% for solution in ready_solutions_15 %}
+                                        <div class="bundle-item" data-ready-solution-id="{{ solution.id }}" data-type="ready_solution">
+                                            <div class="bundle-item__title-top">
+                                                <h2>{{ solution.title }}</h2>
+                                            </div>
+
+                                            {% if solution.get_items %}
+                                                <div class="bundle-item__images-grid">
+                                                    {% for item in solution.get_items %}
+                                                        {% if item.product.imageMain %}
+                                                            <div class="bundle-item__image-with-title">
+                                                                <div class="bundle-item__image-small">
+                                                                    <img src="{{ item.product.imageMain.url }}" alt="{{ item.product.title }}">
+                                                                </div>
+                                                                <p class="bundle-item__product-name">{{ item.product.title }}{% if item.quantity > 1 %} × {{ item.quantity }}{% endif %}</p>
+                                                            </div>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+
+                                            <div class="bundle-item__price-section">
+                                                <p class="bundle-item__price">{{ solution.price }} ₽</p>
+                                            </div>
+
+                                            <div class="item__buttons">
+                                                <div class="button-config">
+                                                    <button type="button" class="decrease-qty">-</button>
+                                                    <span class="item-quantity">1</span>
+                                                    <button type="button" class="increase-qty">+</button>
+                                                </div>
+                                                <button class="button-to-card button-ready-solution" type="button" data-ready-solution-id="{{ solution.id }}">
+                                                    В корзину
+                                                </button>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </li>
+            {% endif %}
 
             {% for product in products %}
             <li class="menu-products__item item" context="{{ product.category.id }}" data-product-id="{{ product.id }}">

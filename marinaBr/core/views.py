@@ -8,19 +8,21 @@ from django.template.loader import render_to_string
 from decimal import Decimal
 import json
 
-from .models import Product, Category, Order, OrderItem
+from .models import Product, Category, Order, OrderItem, ReadySolution
 from .forms import OrderForm, ContactForm
 from .cart_utils import (
     add_to_cart, remove_from_cart, update_cart_item,
+    add_ready_solution_to_cart, remove_ready_solution_from_cart, update_ready_solution_cart_item,
     get_cart_items, get_cart_total_quantity, clear_cart
 )
 
 from django.db.models.functions import Length
 
 def index(request):
-    categories = Category.objects.annotate(name_length=Length('title')).order_by('name_length')
-    products = Product.objects.filter(is_published=True, is_bundle=False).select_related('category').prefetch_related('bundle_items')
-    bundle_products = Product.objects.filter(is_published=True, is_bundle=True).select_related('category').prefetch_related('bundle_items__product').order_by('persons_count')
+    # Исключаем категорию "Готовые решения", если она есть, чтобы избежать дублирования
+    categories = Category.objects.annotate(name_length=Length('title')).exclude(title='Готовые решения').order_by('name_length')
+    products = Product.objects.filter(is_published=True, is_bundle=False).select_related('category')
+    ready_solutions = ReadySolution.objects.filter(is_published=True).prefetch_related('items__product').order_by('persons_count')
     
     form = ContactForm()
     
@@ -56,10 +58,16 @@ def index(request):
         else:
             messages.error(request, 'Пожалуйста, исправьте ошибки в форме.')
 
+    # Группируем готовые решения по количеству персон
+    ready_solutions_10 = ready_solutions.filter(persons_count=10)
+    ready_solutions_15 = ready_solutions.filter(persons_count=15)
+    
     context = {
         'categories': categories,
         'products': products,
-        'bundle_products': bundle_products,
+        'ready_solutions': ready_solutions,
+        'ready_solutions_10': ready_solutions_10,
+        'ready_solutions_15': ready_solutions_15,
         'form': form,
     }
 
@@ -144,6 +152,70 @@ def update_cart_item_view(request, product_id):
     return redirect('cart')
 
 
+@require_POST
+def add_ready_solution_to_cart_view(request, solution_id):
+    """Добавить готовое решение в корзину"""
+    solution = get_object_or_404(ReadySolution, id=solution_id, is_published=True)
+    quantity = int(request.POST.get('quantity', 1))
+    
+    add_ready_solution_to_cart(request, solution_id, quantity)
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        # AJAX запрос
+        cart_total = get_cart_total_quantity(request)
+        return JsonResponse({
+            'success': True,
+            'cart_total': cart_total,
+            'message': f'{solution.title} добавлено в корзину'
+        })
+    
+    return redirect('cart')
+
+
+@require_POST
+def remove_ready_solution_from_cart_view(request, solution_id):
+    """Удалить готовое решение из корзины"""
+    remove_ready_solution_from_cart(request, solution_id)
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        cart_total = get_cart_total_quantity(request)
+        cart_items, total_price = get_cart_items(request)
+        return JsonResponse({
+            'success': True,
+            'cart_total': cart_total,
+            'total_price': str(total_price)
+        })
+    
+    return redirect('cart')
+
+
+@require_POST
+def update_ready_solution_cart_item_view(request, solution_id):
+    """Обновить количество готового решения в корзине"""
+    quantity = int(request.POST.get('quantity', 1))
+    update_ready_solution_cart_item(request, solution_id, quantity)
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        cart_total = get_cart_total_quantity(request)
+        cart_items, total_price = get_cart_items(request)
+        
+        # Найти обновленное готовое решение
+        item_total = Decimal('0')
+        for item in cart_items:
+            if item.get('type') == 'ready_solution' and item.get('ready_solution').id == int(solution_id):
+                item_total = item['total']
+                break
+        
+        return JsonResponse({
+            'success': True,
+            'cart_total': cart_total,
+            'item_total': str(item_total),
+            'total_price': str(total_price)
+        })
+    
+    return redirect('cart')
+
+
 def get_cart_info(request):
     """Получить информацию о корзине для AJAX"""
     cart_total = get_cart_total_quantity(request)
@@ -181,13 +253,31 @@ def create_order(request):
             # Создать товары заказа
             order_items_text = []
             for item in cart_items:
-                OrderItem.objects.create(
-                    order=order,
-                    product=item['product'],
-                    quantity=item['quantity'],
-                    price=item['product'].price
-                )
-                order_items_text.append(f"- {item['product'].title} x{item['quantity']} = {item['total']} ₽")
+                if item.get('type') == 'ready_solution':
+                    # Для готового решения создаем запись с фиксированной ценой
+                    # Можно создать отдельную модель OrderReadySolution или использовать продукт с ценой готового решения
+                    # Для упрощения используем Product с is_bundle=True или создаем запись напрямую
+                    ready_solution = item['ready_solution']
+                    # Создаем запись в OrderItem с ценой готового решения
+                    # Временно используем первый продукт из решения для хранения в OrderItem
+                    # В идеале нужно создать отдельную модель OrderReadySolutionItem
+                    if ready_solution.get_items():
+                        first_product = ready_solution.get_items()[0].product
+                        OrderItem.objects.create(
+                            order=order,
+                            product=first_product,
+                            quantity=item['quantity'],
+                            price=ready_solution.price
+                        )
+                        order_items_text.append(f"- {ready_solution.title} (готовое решение) x{item['quantity']} = {item['total']} ₽")
+                else:
+                    OrderItem.objects.create(
+                        order=order,
+                        product=item['product'],
+                        quantity=item['quantity'],
+                        price=item['product'].price
+                    )
+                    order_items_text.append(f"- {item['product'].title} x{item['quantity']} = {item['total']} ₽")
             
             # Отправить email с заказом
             try:

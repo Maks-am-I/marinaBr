@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="{% static 'assets/img/logo.svg' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'styles/css/main.css' %}">
     <title>Корзина - Maria Br</title>
 </head>
@@ -56,37 +57,71 @@
             
             <div class="cart__items">
                 {% for item in cart_items %}
-                    <div class="cart-item" data-product-id="{{ item.product.id }}">
-                        {% if item.product.imageMain %}
-                            <div class="cart-item__image">
-                                <img src="{{ item.product.imageMain.url }}" alt="{{ item.product.title }}">
+                    {% if item.type == 'ready_solution' %}
+                        <div class="cart-item" data-ready-solution-id="{{ item.ready_solution.id }}" data-type="ready_solution">
+                            {% if item.ready_solution.image_main %}
+                                <div class="cart-item__image">
+                                    <img src="{{ item.ready_solution.image_main.url }}" alt="{{ item.ready_solution.title }}">
+                                </div>
+                            {% else %}
+                                <div class="cart-item__image cart-item__image-placeholder">
+                                    <span>Нет фото</span>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="cart-item__name">
+                                <span>{{ item.ready_solution.title }}</span>
                             </div>
-                        {% else %}
-                            <div class="cart-item__image cart-item__image-placeholder">
-                                <span>Нет фото</span>
+                            
+                            <div class="cart-item__quantity">
+                                <div class="button-config">
+                                    <button type="button" class="decrease-btn-solution" data-ready-solution-id="{{ item.ready_solution.id }}">-</button>
+                                    <span class="quantity-display">{{ item.quantity }}</span>
+                                    <button type="button" class="increase-btn-solution" data-ready-solution-id="{{ item.ready_solution.id }}">+</button>
+                                </div>
                             </div>
-                        {% endif %}
-                        
-                        <div class="cart-item__name">
-                            <span>{{ item.product.title }}</span>
-                        </div>
-                        
-                        <div class="cart-item__quantity">
-                            <div class="button-config">
-                                <button type="button" class="decrease-btn" data-product-id="{{ item.product.id }}">-</button>
-                                <span class="quantity-display">{{ item.quantity }}</span>
-                                <button type="button" class="increase-btn" data-product-id="{{ item.product.id }}">+</button>
+                            
+                            <div class="cart-item__price">
+                                <span class="item-price">{{ item.ready_solution.price }} ₽</span>
+                            </div>
+                            
+                            <div class="cart-item__remove">
+                                <button type="button" class="remove-btn-solution" data-ready-solution-id="{{ item.ready_solution.id }}">×</button>
                             </div>
                         </div>
-                        
-                        <div class="cart-item__price">
-                            <span class="item-price">{{ item.product.price }} ₽</span>
+                    {% else %}
+                        <div class="cart-item" data-product-id="{{ item.product.id }}" data-type="product">
+                            {% if item.product.imageMain %}
+                                <div class="cart-item__image">
+                                    <img src="{{ item.product.imageMain.url }}" alt="{{ item.product.title }}">
+                                </div>
+                            {% else %}
+                                <div class="cart-item__image cart-item__image-placeholder">
+                                    <span>Нет фото</span>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="cart-item__name">
+                                <span>{{ item.product.title }}</span>
+                            </div>
+                            
+                            <div class="cart-item__quantity">
+                                <div class="button-config">
+                                    <button type="button" class="decrease-btn" data-product-id="{{ item.product.id }}">-</button>
+                                    <span class="quantity-display">{{ item.quantity }}</span>
+                                    <button type="button" class="increase-btn" data-product-id="{{ item.product.id }}">+</button>
+                                </div>
+                            </div>
+                            
+                            <div class="cart-item__price">
+                                <span class="item-price">{{ item.product.price }} ₽</span>
+                            </div>
+                            
+                            <div class="cart-item__remove">
+                                <button type="button" class="remove-btn" data-product-id="{{ item.product.id }}">×</button>
+                            </div>
                         </div>
-                        
-                        <div class="cart-item__remove">
-                            <button type="button" class="remove-btn" data-product-id="{{ item.product.id }}">×</button>
-                        </div>
-                    </div>
+                    {% endif %}
                 {% endfor %}
             </div>
             

@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
-from core.models import Product, Category, Order, OrderItem
+from core.models import Product, Category, Order, OrderItem, ReadySolution, ReadySolutionItem
 
 
 @admin.register(Category)
@@ -12,11 +12,51 @@ class CategoryAdmin(admin.ModelAdmin):
     }
 
 
+class ReadySolutionItemInline(admin.TabularInline):
+    model = ReadySolutionItem
+    fields = ('product', 'quantity', 'order')
+    extra = 1
+    verbose_name = 'Товар в составе'
+    verbose_name_plural = 'Товары в составе'
+    autocomplete_fields = ['product']
+    
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.select_related('product')
+
+
+@admin.register(ReadySolution)
+class ReadySolutionAdmin(admin.ModelAdmin):
+    prepopulated_fields = {
+        'slug': ('title',)
+    }
+    list_display = ('title', 'persons_count', 'price', 'is_published', 'created_at')
+    list_filter = ('is_published', 'persons_count', 'created_at')
+    search_fields = ('title', 'description')
+    inlines = [ReadySolutionItemInline]
+    
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('title', 'slug', 'price', 'persons_count', 'is_published')
+        }),
+        ('Описание и изображение', {
+            'fields': ('description', 'image_main')
+        }),
+        ('Системная информация', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    readonly_fields = ('created_at', 'updated_at')
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {
         'slug' : ('title',)
     }
+    search_fields = ('title', 'description')
 
 
 class OrderItemInline(admin.TabularInline):

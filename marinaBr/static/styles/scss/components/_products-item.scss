@@ -9,6 +9,14 @@
     padding: rem(12);
     background-color: var(--color-accent-2);
     border-radius: var(--border-radius-base);
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        background-color: var(--color-main);
+    }
 
     &__title {
         h2 {
