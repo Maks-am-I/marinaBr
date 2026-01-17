@@ -31,6 +31,10 @@ class Product(models.Model):
     imageThird = models.ImageField(upload_to=product_image_path, blank=True, null=True, verbose_name='Дополнительное изображение')
     is_published = models.BooleanField(default=True, verbose_name='Опубликовать')
     category = models.ForeignKey(to=Category, on_delete=models.CASCADE, verbose_name='Категория')
+    is_bundle = models.BooleanField(default=False, verbose_name='Готовое решение (содержит другие товары)')
+    
+    # Для готовых решений - количество персон (10, 15 и т.д.)
+    persons_count = models.PositiveIntegerField(blank=True, null=True, verbose_name='Количество персон', help_text='Только для готовых решений')
 
     class Meta:
         db_table = 'product'
@@ -44,6 +48,42 @@ class Product(models.Model):
         if self.ingredientsList:
             return [ingredient.strip() for ingredient in self.ingredientsList.split(';')]
         return []
+    
+    def get_bundle_items(self):
+        """Получить компоненты готового решения"""
+        if self.is_bundle:
+            return self.bundle_items.all().order_by('order', 'product__title')
+        return []
+
+
+class ProductBundleItem(models.Model):
+    """Компоненты готового решения"""
+    bundle = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name='bundle_items',
+        verbose_name='Готовое решение',
+        limit_choices_to={'is_bundle': True}
+    )
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.PROTECT,
+        related_name='in_bundles',
+        verbose_name='Товар в составе',
+        limit_choices_to={'is_bundle': False}
+    )
+    quantity = models.PositiveIntegerField(default=1, verbose_name='Количество')
+    order = models.PositiveIntegerField(default=0, verbose_name='Порядок отображения')
+    
+    class Meta:
+        db_table = 'product_bundle_item'
+        verbose_name = 'Товар в готовом решении'
+        verbose_name_plural = 'Товары в готовых решениях'
+        ordering = ['order', 'product__title']
+        unique_together = ['bundle', 'product']
+    
+    def __str__(self):
+        return f'{self.bundle.title} → {self.product.title} x{self.quantity}'
 
 class Order(models.Model):
     STATUS_CHOICES = [

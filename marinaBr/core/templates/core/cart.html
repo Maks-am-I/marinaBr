@@ -115,20 +115,22 @@
                     {% endif %}
                 </div>
                 
-                <div class="order-form__field">
-                    <label for="id_order_date">Дата заказа</label>
-                    <input type="date" name="order_date" id="id_order_date" value="{{ form.order_date.value|default:'' }}" min="{% now 'Y-m-d' %}" required>
-                    {% if form.order_date.errors %}
-                        <span class="form-error">{{ form.order_date.errors.0 }}</span>
-                    {% endif %}
-                </div>
-                
-                <div class="order-form__field">
-                    <label for="id_order_time">Время заказа</label>
-                    <input type="time" name="order_time" id="id_order_time" value="{{ form.order_time.value|default:'' }}" required>
-                    {% if form.order_time.errors %}
-                        <span class="form-error">{{ form.order_time.errors.0 }}</span>
-                    {% endif %}
+                <div class="order-form__row">
+                    <div class="order-form__field order-form__field--half">
+                        <label for="id_order_date">Дата заказа</label>
+                        <input type="date" name="order_date" id="id_order_date" value="{{ form.order_date.value|default:'' }}" min="{% now 'Y-m-d' %}" required>
+                        {% if form.order_date.errors %}
+                            <span class="form-error">{{ form.order_date.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="order-form__field order-form__field--half">
+                        <label for="id_order_time">Время заказа</label>
+                        <input type="time" name="order_time" id="id_order_time" value="{{ form.order_time.value|default:'' }}" required>
+                        {% if form.order_time.errors %}
+                            <span class="form-error">{{ form.order_time.errors.0 }}</span>
+                        {% endif %}
+                    </div>
                 </div>
                 
                 <div class="order-form__field">

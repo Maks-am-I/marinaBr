@@ -132,3 +132,15 @@ MEDIA_ROOT = BASE_DIR / 'media/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mail.ru'  # Замените на ваш SMTP сервер
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'mikc3000@mail.ru'  # Замените на ваш email
+EMAIL_HOST_PASSWORD = 'Hi1RPSoi71xaq0Yf4NKY'  # Замените на ваш пароль приложения
+DEFAULT_FROM_EMAIL = ''  # Email отправителя (можно оставить пустым, будет использован EMAIL_HOST_USER)
+
+# Email для получения заявок
+ADMIN_EMAIL = 'mikc3000@mail.ru'  # Замените на email, куда будут приходить заявки

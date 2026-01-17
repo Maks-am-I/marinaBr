@@ -2,6 +2,37 @@ from django import forms
 from datetime import date, time
 
 
+class ContactForm(forms.Form):
+    name = forms.CharField(
+        max_length=255,
+        label='Имя',
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Имя',
+            'class': 'form-input'
+        })
+    )
+    
+    phone = forms.CharField(
+        max_length=20,
+        label='Номер телефона',
+        widget=forms.TextInput(attrs={
+            'type': 'tel',
+            'placeholder': '+7 (999) 999 99 99',
+            'class': 'form-input'
+        })
+    )
+    
+    question = forms.CharField(
+        label='Ваш вопрос',
+        required=False,
+        widget=forms.Textarea(attrs={
+            'rows': 3,
+            'placeholder': 'Опишите ваш вопрос...',
+            'class': 'form-textarea'
+        })
+    )
+
+
 class OrderForm(forms.Form):
     customer_name = forms.CharField(
         max_length=255,

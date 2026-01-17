@@ -41,6 +41,17 @@
         </a>
     </header>
 
+    {% if messages %}
+        <div class="messages-overlay" id="messages-overlay">
+            {% for message in messages %}
+                <div class="notification notification-{{ message.tags }} show" data-message-id="{{ forloop.counter }}">
+                    <button type="button" class="notification__close" aria-label="Закрыть">×</button>
+                    <div class="notification__content">{{ message }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <section class="hero container">
         <div class="hero__title">
             <h1>
@@ -92,11 +103,71 @@
         </div>
     </section>
 
+    {% if bundle_products %}
+    <section class="bundles container" id="bundles">
+        <h2>Готовые решения</h2>
+        <div class="bundles__grid">
+            {% for bundle in bundle_products %}
+            <div class="bundle-item" data-product-id="{{ bundle.id }}">
+                {% if bundle.imageMain %}
+                    <div class="bundle-item__image">
+                        <img src="{{ bundle.imageMain.url }}" alt="{{ bundle.title }}">
+                    </div>
+                {% endif %}
+                
+                <div class="bundle-item__header">
+                    <h3 class="bundle-item__title">{{ bundle.title }}</h3>
+                    {% if bundle.description %}
+                        <p class="bundle-item__subtitle">{{ bundle.description }}</p>
+                    {% endif %}
+                </div>
+                
+                {% if bundle.get_bundle_items %}
+                    <div class="bundle-item__content">
+                        {% for bundle_item in bundle.get_bundle_items %}
+                            <div class="bundle-item__component">
+                                {% if bundle_item.product.imageMain %}
+                                    <div class="bundle-item__component-image">
+                                        <img src="{{ bundle_item.product.imageMain.url }}" alt="{{ bundle_item.product.title }}">
+                                    </div>
+                                {% endif %}
+                                <div class="bundle-item__component-info">
+                                    <p class="bundle-item__component-name">{{ bundle_item.product.title }}</p>
+                                    {% if bundle_item.quantity > 1 %}
+                                        <p class="bundle-item__component-quantity">× {{ bundle_item.quantity }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                
+                <div class="bundle-item__footer">
+                    <div class="bundle-item__price">
+                        <span class="bundle-item__price-value">{{ bundle.price }} ₽</span>
+                    </div>
+                    <div class="bundle-item__buttons">
+                        <div class="button-config">
+                            <button type="button" class="decrease-qty">-</button>
+                            <span class="item-quantity">1</span>
+                            <button type="button" class="increase-qty">+</button>
+                        </div>
+                        <button class="button-to-card" type="button" data-product-id="{{ bundle.id }}">
+                            В корзину
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
     <section class="products container" id="products">
         <h2>Ассортимент</h2>
         <ul class="products__list" id="list-categoties">
             {% for category in categories %}
-                <li id="{{ category.id }}">
+                <li id="{{ category.id }}" class="category-filter">
                     {{ category.title }}
                 </li>
             {% endfor %}
@@ -208,15 +279,16 @@
                 Заполните форму и опишите свой вопрос. Я обязательно Вам перезвоню.
             </p>
         </div>
-        <form action="#" method="post" class="main-form__form">
-            <label for="name">Имя:</label>
-            <input type="text" name="name" id="name" placeholder="Имя">
+        <form method="post" action="{% url 'index' %}" class="main-form__form">
+            {% csrf_token %}
+            <label for="id_name">Имя:</label>
+            <input type="text" name="name" id="id_name" placeholder="Имя" value="{{ form.name.value|default:'' }}" required>
 
-            <label for="phone">Номер телефона:</label>
-            <input type="tel" name="phone" id="phone" placeholder="+7 (999) 999 99 99">
+            <label for="id_phone">Номер телефона:</label>
+            <input type="tel" name="phone" id="id_phone" placeholder="+7 (999) 999 99 99" value="{{ form.phone.value|default:'' }}" required>
 
-            <label for="question">Ваш вопрос:</label>
-            <textarea name="question" row=3 id="question"></textarea>
+            <label for="id_question">Ваш вопрос:</label>
+            <textarea name="question" id="id_question" rows="3" placeholder="Опишите ваш вопрос...">{{ form.question.value|default:'' }}</textarea>
 
             <input type="submit" value="Отправить">
         </form>
@@ -246,5 +318,7 @@
     <script src="{% static 'scripts/burger.js' %}"></script>
     <script src="{% static 'scripts/buttonUp.js' %}"></script>
     <script src="{% static 'scripts/cart.js' %}"></script>
+    <script src="{% static 'scripts/category-filter.js' %}"></script>
+    <script src="{% static 'scripts/notifications.js' %}"></script>
 </body>
 </html>

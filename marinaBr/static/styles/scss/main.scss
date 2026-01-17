@@ -9,6 +9,7 @@
 @use './layouts/contacts-info';
 @use './layouts/hero';
 @use './layouts/conditions';
+@use './layouts/bundles';
 @use './layouts/products';
 @use './layouts/cart';
 
@@ -19,3 +20,4 @@
 @use './components/products-item';
 @use './components/button-config';
 @use './components/buttonUp';
+@use './components/notifications';

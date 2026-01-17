@@ -29,6 +29,20 @@
             padding-inline: 2vw;
             background-color: var(--color-accent-2);
             border-radius: 50vh;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            user-select: none;
+
+            &:hover {
+                background-color: var(--color-accent);
+                color: var(--color-background);
+                transform: translateY(-2px);
+            }
+
+            &.active {
+                background-color: var(--color-font-base);
+                color: var(--color-background);
+            }
         }
     }
 
@@ -38,6 +52,15 @@
         grid-template-columns: repeat(auto-fill, minmax(min(100%, rem(160)), 1fr));
         gap: rem(16);
         width: 100%;
+
+        .item {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            
+            &[style*="display: none"] {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+        }
     }
 }
 

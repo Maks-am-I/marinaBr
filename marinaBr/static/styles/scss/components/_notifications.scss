@@ -1,0 +1,102 @@
+@use '../helpers/' as *;
+
+// Overlay для сообщений
+.messages-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: rem(80);
+    z-index: 2000;
+    backdrop-filter: blur(2px);
+}
+
+// Уведомления
+.notification {
+    position: relative;
+    background-color: var(--color-accent);
+    color: var(--color-background);
+    padding: rem(20) rem(40) rem(20) rem(25);
+    border-radius: var(--border-radius-base);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 2001;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+    font-weight: 500;
+    max-width: rem(500);
+    width: 90%;
+    margin: 0 auto;
+    min-height: rem(60);
+    display: flex;
+    align-items: center;
+
+    @media (max-width: 767px) {
+        padding: rem(16) rem(35) rem(16) rem(20);
+        max-width: 90%;
+        min-height: rem(50);
+        font-size: rem(14);
+    }
+
+    &.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    &.notification-error {
+        background-color: var(--color-font-price);
+    }
+
+    &.notification-success {
+        background-color: var(--color-accent);
+    }
+
+    &__content {
+        flex: 1;
+        line-height: 1.5;
+    }
+
+    &__close {
+        position: absolute;
+        top: rem(10);
+        right: rem(10);
+        background: none;
+        border: none;
+        color: var(--color-background);
+        font-size: rem(24);
+        line-height: 1;
+        cursor: pointer;
+        padding: rem(5);
+        width: rem(30);
+        height: rem(30);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.2s ease;
+        opacity: 0.8;
+
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            opacity: 1;
+            transform: rotate(90deg);
+        }
+
+        &:active {
+            transform: rotate(90deg) scale(0.9);
+        }
+
+        @media (max-width: 767px) {
+            top: rem(8);
+            right: rem(8);
+            font-size: rem(20);
+            width: rem(26);
+            height: rem(26);
+        }
+    }
+}
